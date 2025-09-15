@@ -1,0 +1,32 @@
+import React from 'react';
+
+interface LandingPageProps {
+  onEnter: () => void;
+}
+
+const EnterIcon = () => (
+    <svg className="w-6 h-6 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+);
+
+export const LandingPage: React.FC<LandingPageProps> = ({ onEnter }) => {
+  return (
+    // Replaced the solid black overlay with a subtle gradient to ensure text readability while making the background video visible.
+    <div className="h-screen w-screen flex flex-col items-center justify-center text-center text-white p-4 bg-gradient-to-b from-black/60 via-transparent to-black/60">
+        <div className="bg-black/30 backdrop-blur-md p-10 rounded-xl border border-white/20 shadow-2xl">
+            <h1 className="text-5xl md:text-7xl font-extrabold mb-4 tracking-tight">
+                MineSafe India
+            </h1>
+            <p className="text-lg md:text-xl text-text-secondary max-w-2xl mx-auto mb-8">
+                Leveraging predictive AI to create a safer future for mining operations. Real-time monitoring and rockfall prediction at your fingertips.
+            </p>
+            <button 
+                onClick={onEnter} 
+                className="flex items-center justify-center mx-auto px-8 py-4 bg-gradient-to-r from-accent to-secondary-accent text-white font-bold rounded-lg text-lg hover:from-accent-hover hover:to-accent transition-all duration-300 transform hover:scale-105 shadow-lg"
+            >
+                Enter National Oversight Map
+                <EnterIcon />
+            </button>
+        </div>
+    </div>
+  );
+};

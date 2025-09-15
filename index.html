@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MineSafe India - AI Rockfall Prediction</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+     integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+     crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+     integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+     crossorigin=""></script>
+    <style>
+      body {
+        background-color: #111827; /* gray-900 */
+        /* Dynamic, cursor-following warm-color gradient */
+        background-image: radial-gradient(
+          1000px circle at var(--mouse-x, -1000px) var(--mouse-y, -1000px),
+          rgba(239, 68, 68, 0.1),   /* Red */
+          rgba(249, 115, 22, 0.08), /* Orange */
+          rgba(234, 179, 8, 0.06),  /* Yellow */
+          rgba(34, 197, 94, 0.08),  /* Green */
+          transparent 70%
+        );
+        transition: background 0.2s ease-out;
+      }
+    </style>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['Inter', 'sans-serif'],
+            },
+            colors: {
+              'background': '#111827', // gray-900
+              'sidebar': '#1F2937',   // gray-800
+              'card': '#1F2937',       // gray-800
+              'primary': '#374151',    // gray-700
+              'accent': '#F97316', // orange-500
+              'accent-hover': '#EA580C', // orange-600
+              'secondary-accent': '#EAB308', // yellow-500
+              'text-primary': '#F3F4F6', // gray-100
+              'text-secondary': '#9CA3AF', // gray-400
+              'critical': '#EF4444', // red-500
+              'high': '#F97316',   // orange-500
+              'medium': '#EAB308',  // yellow-500
+              'low': '#22C55E',    // green-500
+              'border': '#374151',    // gray-700
+            },
+            animation: {
+              'pulse-fast': 'pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+            }
+          }
+        }
+      }
+    </script>
+  <script type="importmap">
+{
+  "imports": {
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.1.1/",
+    "recharts": "https://aistudiocdn.com/recharts@^3.2.0",
+    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.19.0",
+    "react/": "https://aistudiocdn.com/react@^19.1.1/",
+    "react": "https://aistudiocdn.com/react@^19.1.1"
+  }
+}
+</script>
+</head>
+  <body class="text-text-primary font-sans antialiased">
+    <div id="root"></div>
+    <script type="module" src="/index.tsx"></script>
+  </body>
+</html>
