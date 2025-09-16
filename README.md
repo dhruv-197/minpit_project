@@ -1,8 +1,5 @@
 <div align="center">
 </div>
-This contains everything you need to run your app locally.
-View your app in AI Studio: https://ai.studio/apps/drive/1u8HtAICtaqJn5LAM3DyQW0KPUnmifT8N
-
 ## Run Locally
 
 **Prerequisites:**  Node.js
