@@ -9,11 +9,11 @@ interface DashboardProps {
     data: MineData | null;
 }
 
-const riskStyles: Record<RiskLevel, { bg: string, text: string, border: string, gradient: string }> = {
+const riskStyles: Record<RiskLevel, { bg: string, text: string, border: string, gradient: string, animation?: string }> = {
     'Low': { bg: 'bg-low/10', text: 'text-low', border: 'border-low', gradient: 'from-low/30' },
     'Medium': { bg: 'bg-medium/10', text: 'text-medium', border: 'border-medium', gradient: 'from-medium/30' },
     'Hard': { bg: 'bg-high/10', text: 'text-high', border: 'border-high', gradient: 'from-high/30' },
-    'Critical': { bg: 'bg-critical/10', text: 'text-critical', border: 'border-critical', gradient: 'from-critical/30' },
+    'Critical': { bg: 'bg-critical/10', text: 'text-critical', border: 'border-critical', gradient: 'from-critical/30', animation: 'animate-pulse-fast' },
 };
 
 const DataPoint: React.FC<{ label: keyof typeof DataIcons; value: string | number; unit?: string }> = ({ label, value, unit }) => {
@@ -39,32 +39,33 @@ export const Dashboard: React.FC<DashboardProps> = ({ data }) => {
     const { overallRisk, sensors } = data;
     const styles = riskStyles[overallRisk];
 
-    const seismicData = sensors.filter(s => s.sensorType === 'seismic');
-    const gasData = sensors.filter(s => s.sensorType === 'gas');
-    const temperatureData = sensors.filter(s => s.sensorType === 'temperature');
-    const airflowData = sensors.filter(s => s.sensorType === 'air-flow');
-    const windSpeedData = sensors.filter(s => s.sensorType === 'wind-speed');
-    
-    const latestSeismic = seismicData.length > 0 ? seismicData[seismicData.length - 1].value.toFixed(2) : 'N/A';
-    const latestGas = gasData.length > 0 ? gasData[gasData.length - 1].value.toFixed(2) : 'N/A';
-    const latestTemp = temperatureData.length > 0 ? temperatureData[temperatureData.length - 1].value.toFixed(2) : 'N/A';
-    const latestAirflow = airflowData.length > 0 ? airflowData[airflowData.length - 1].value.toFixed(2) : 'N/A';
-    const latestWindSpeed = windSpeedData.length > 0 ? windSpeedData[windSpeedData.length - 1].value.toFixed(2) : 'N/A';
+    const getSensorData = (type: string) => sensors.filter(s => s.sensorType === type);
+    const getLatestValue = (sensorData: any[]) => sensorData.length > 0 ? sensorData[sensorData.length - 1].value.toFixed(2) : 'N/A';
+
+    const seismicData = getSensorData('seismic');
+    const gasData = getSensorData('gas');
+    const temperatureData = getSensorData('temperature');
+    const airflowData = getSensorData('air-flow');
+    const windSpeedData = getSensorData('wind-speed');
+    const displacementData = getSensorData('displacement');
+    const porePressureData = getSensorData('pore-pressure');
 
     return (
         <div className="space-y-6">
             <Card>
-                <div className={`p-6 rounded-lg border-l-4 ${styles.border} bg-gradient-to-r ${styles.gradient} to-card flex flex-col md:flex-row justify-between items-center gap-6`}>
+                <div className={`p-6 rounded-lg border-l-4 ${styles.border} bg-gradient-to-r ${styles.gradient} to-card flex flex-col md:flex-row justify-between items-center gap-6 ${styles.animation}`}>
                     <div className="text-center md:text-left">
                         <p className="text-sm font-medium text-text-secondary uppercase tracking-wider">Current Risk Level</p>
                         <p className={`text-6xl font-extrabold ${styles.text}`}>{overallRisk.toUpperCase()}</p>
                     </div>
-                    <div className="grid grid-cols-2 md:grid-cols-5 gap-4 w-full md:w-auto flex-grow">
-                       <DataPoint label="seismic" value={latestSeismic} unit="μm/s" />
-                       <DataPoint label="gas" value={latestGas} unit="ppm" />
-                       <DataPoint label="temperature" value={latestTemp} unit="°C" />
-                       <DataPoint label="air-flow" value={latestAirflow} unit="m/s" />
-                       <DataPoint label="wind-speed" value={latestWindSpeed} unit="m/s" />
+                    <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-4 w-full md:w-auto flex-grow">
+                       <DataPoint label="seismic" value={getLatestValue(seismicData)} unit="μm/s" />
+                       <DataPoint label="displacement" value={getLatestValue(displacementData)} unit="mm" />
+                       <DataPoint label="pore-pressure" value={getLatestValue(porePressureData)} unit="kPa" />
+                       <DataPoint label="gas" value={getLatestValue(gasData)} unit="ppm" />
+                       <DataPoint label="temperature" value={getLatestValue(temperatureData)} unit="°C" />
+                       <DataPoint label="air-flow" value={getLatestValue(airflowData)} unit="m/s" />
+                       <DataPoint label="wind-speed" value={getLatestValue(windSpeedData)} unit="m/s" />
                     </div>
                 </div>
             </Card>
@@ -72,6 +73,16 @@ export const Dashboard: React.FC<DashboardProps> = ({ data }) => {
                 <Card title="Seismic Activity Trend">
                     <div className="h-64">
                       <SensorChart data={seismicData} color="#22C55E" legendName="Activity" unit="μm/s" />
+                    </div>
+                </Card>
+                 <Card title="Ground Displacement Trend">
+                    <div className="h-64">
+                        <SensorChart data={displacementData} color="#8B5CF6" legendName="Movement" unit="mm" />
+                    </div>
+                </Card>
+                 <Card title="Pore Water Pressure Trend">
+                    <div className="h-64">
+                        <SensorChart data={porePressureData} color="#3B82F6" legendName="Pressure" unit="kPa" />
                     </div>
                 </Card>
                  <Card title="Gas Levels Trend">

@@ -31,6 +31,18 @@ const getRadiusFromVolume = (volume: number) => {
     return 34;
 };
 
+const getHeatmapColor = (probability: number, volume: number): string => {
+    // Normalize volume on a log scale to handle wide range, capped at 50,000
+    const normalizedVolume = Math.log1p(volume) / Math.log1p(50000);
+    // Combine probability and volume, giving more weight to probability
+    const heat = probability * 0.7 + normalizedVolume * 0.3;
+
+    if (heat > 0.4) return '#EF4444'; // red-500
+    if (heat > 0.25) return '#F97316'; // orange-500
+    if (heat > 0.1) return '#EAB308'; // yellow-500
+    return '#22C55E'; // green-500
+};
+
 
 const TriggerLegend = () => (
     <div className="bg-black/40 backdrop-blur-md p-4 rounded-lg shadow-lg border border-white/20">
@@ -73,23 +85,49 @@ export const RiskMapView: React.FC<RiskMapViewProps> = ({ data }) => {
     const mapContainerRef = useRef<HTMLDivElement>(null);
     const mapRef = useRef<any>(null);
     const eventsLayerRef = useRef<any>(null);
+    const heatmapLayerRef = useRef<any>(null);
 
     useEffect(() => {
         if (mapContainerRef.current && !mapRef.current && data) {
             mapRef.current = L.map(mapContainerRef.current, { zoomControl: false }).setView([data.mine.lat, data.mine.lng], 15);
             L.control.zoom({ position: 'topleft' }).addTo(mapRef.current);
-            L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-                attribution: 'Tiles &copy; Esri'
-            }).addTo(mapRef.current);
 
-            eventsLayerRef.current = L.layerGroup().addTo(mapRef.current);
+            // --- Define Base Layers ---
+            const satelliteLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+                attribution: 'Tiles &copy; Esri'
+            });
+            const terrainLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}', {
+                attribution: 'Tiles &copy; Esri'
+            });
+
+            satelliteLayer.addTo(mapRef.current); // Default base layer
+
+            // --- Define Overlay Layers ---
+            eventsLayerRef.current = L.layerGroup().addTo(mapRef.current); // Default overlay
+            heatmapLayerRef.current = L.layerGroup();
+
+            // --- Create Layer Control ---
+            const baseMaps = {
+                "Satellite": satelliteLayer,
+                "Terrain": terrainLayer
+            };
+            const overlayMaps = {
+                "Rockfall Events": eventsLayerRef.current,
+                "Risk Heatmap": heatmapLayerRef.current,
+            };
+
+            L.control.layers(baseMaps, overlayMaps, { position: 'topright' }).addTo(mapRef.current);
         }
 
-        if (mapRef.current && eventsLayerRef.current && data) {
+        if (mapRef.current && eventsLayerRef.current && heatmapLayerRef.current && data) {
             mapRef.current.flyTo([data.mine.lat, data.mine.lng], 15);
+            
+            // Clear old data from layers
             eventsLayerRef.current.clearLayers();
+            heatmapLayerRef.current.clearLayers();
 
             data.rockfallEvents.forEach(event => {
+                // --- Add to Rockfall Events Layer ---
                 const circle = L.circleMarker([event.lat, event.lng], {
                     radius: getRadiusFromVolume(event.volume),
                     color: '#F9FAFB', // white border
@@ -108,22 +146,56 @@ export const RiskMapView: React.FC<RiskMapViewProps> = ({ data }) => {
                     className: 'map-tooltip',
                     sticky: true
                 });
+                
+                // --- Add to Heatmap Layer ---
+                const heatColor = getHeatmapColor(event.probability, event.volume);
+                const heatCircle = L.circle([event.lat, event.lng], {
+                    radius: 40, // Fixed radius in meters for visual consistency
+                    color: 'transparent', // No border
+                    fillColor: heatColor,
+                    fillOpacity: 0.4,
+                }).addTo(heatmapLayerRef.current);
+
+                heatCircle.bindTooltip(`
+                    <div style="font-family: Inter, sans-serif; font-size: 13px;">
+                      <b>Risk Influence</b><br/>
+                      Prob: ${(event.probability * 100).toFixed(1)}% | Vol: ${event.volume.toFixed(2)} m³
+                    </div>
+                `, {
+                    className: 'map-tooltip',
+                    sticky: true,
+                    offset: L.point(0, -10)
+                });
             });
         }
         
-        // Add a style block for custom tooltip appearance
-        const style = document.createElement('style');
-        style.innerHTML = `
-          .leaflet-tooltip.map-tooltip {
-            background-color: rgba(31, 41, 55, 0.8);
-            border: 1px solid #374151;
-            color: #F9FAFB;
-            border-radius: 6px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.5);
-          }
-        `;
-        document.head.appendChild(style);
-
+        // Add a style block for custom UI appearance
+        const styleId = 'custom-leaflet-styles';
+        if (!document.getElementById(styleId)) {
+            const style = document.createElement('style');
+            style.id = styleId;
+            style.innerHTML = `
+              .leaflet-tooltip.map-tooltip {
+                background-color: rgba(31, 41, 55, 0.8);
+                border: 1px solid #374151;
+                color: #F9FAFB;
+                border-radius: 6px;
+                box-shadow: 0 1px 3px rgba(0,0,0,0.5);
+              }
+              .leaflet-control-layers {
+                background-color: rgba(31, 41, 55, 0.8) !important;
+                backdrop-filter: blur(4px);
+                border: 1px solid #374151 !important;
+                color: #F3F4F6 !important;
+                border-radius: 6px !important;
+                box-shadow: 0 1px 3px rgba(0,0,0,0.5) !important;
+              }
+               .leaflet-control-layers-selector {
+                  vertical-align: middle;
+               }
+            `;
+            document.head.appendChild(style);
+        }
 
         setTimeout(() => {
             mapRef.current?.invalidateSize();

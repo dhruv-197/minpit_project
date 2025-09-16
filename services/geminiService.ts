@@ -1,8 +1,21 @@
 import { GoogleGenAI, Type } from "@google/genai";
-import type { Mine, MineData, RiskAnalysis, SensorDataPoint, SensorType } from '../types';
+import type { Mine, MineData, RiskAnalysis, SensorDataPoint, SensorType, RockfallEventType } from '../types';
 
 // Per guidelines, API key must be from process.env.API_KEY
 const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+
+const validRockfallEventTypes: RockfallEventType[] = [
+  'Precipitation',
+  'Snowmelt',
+  'Rain-on-snow',
+  'Crack propagation',
+  'Wildfire',
+  'Blasting',
+  'Ground vibration',
+  'Freeze-thaw',
+  'Thermal stress',
+  'Unknown'
+];
 
 export const getMineData = async (mine: Mine): Promise<MineData> => {
     // Define the schema programmatically for the API to enforce valid JSON output
@@ -19,7 +32,7 @@ export const getMineData = async (mine: Mine): Promise<MineData> => {
                         time: { type: Type.STRING, description: "ISO 8601 timestamp for the reading." },
                         value: { type: Type.NUMBER, description: "The numerical value of the sensor reading." },
                         sensorId: { type: Type.STRING, description: "A unique identifier for the sensor." },
-                        sensorType: { type: Type.STRING, description: "Type of sensor: 'seismic', 'gas', 'temperature', 'air-flow', or 'wind-speed'." },
+                        sensorType: { type: Type.STRING, description: "Type of sensor: 'seismic', 'gas', 'temperature', 'air-flow', 'wind-speed', 'displacement', or 'pore-pressure'." },
                     },
                     required: ["time", "value", "sensorId", "sensorType"]
                 }
@@ -49,7 +62,11 @@ export const getMineData = async (mine: Mine): Promise<MineData> => {
                         id: { type: Type.STRING, description: "A unique identifier for the event." },
                         lat: { type: Type.NUMBER, description: "Latitude of the potential event." },
                         lng: { type: Type.NUMBER, description: "Longitude of the potential event." },
-                        type: { type: Type.STRING, description: "The trigger type for the potential rockfall." },
+                        type: { 
+                            type: Type.STRING, 
+                            description: "The trigger type for the potential rockfall.",
+                            enum: validRockfallEventTypes
+                        },
                         volume: { type: Type.NUMBER, description: "Estimated volume of the rockfall in cubic meters." },
                         probability: { type: Type.NUMBER, description: "The probability of the event occurring (0 to 1)." },
                     },
@@ -60,22 +77,25 @@ export const getMineData = async (mine: Mine): Promise<MineData> => {
         required: ["overallRisk", "sensors", "alerts", "rockfallEvents"]
     };
 
-    // The prompt is now simpler, focusing on the content and context, not the structure.
     const prompt = `
       Generate a realistic, simulated dataset for the "${mine.name}" mining operation, located in ${mine.location} (approx. coordinates: lat ${mine.lat}, lng ${mine.lng}).
       The data should represent a snapshot of current conditions and potential rockfall risks.
 
-      - The 'overallRisk' should reflect a logical assessment of the generated sensor data and active alerts. The possible risk levels are 'Low', 'Medium', 'Hard', and 'Critical'.
-      - Generate a time-series of sensor data for the last 12 hours, with readings every 30 minutes for each of the five sensor types (seismic, gas, temperature, air-flow, wind-speed). Ensure the values fluctuate realistically.
-        - Seismic data (μm/s): Normal range 0-500. Spikes up to 1500 could indicate instability.
-        - Gas levels (ppm): Normal range 0-50. Higher values are dangerous.
-        - Temperature (°C): Normal range 15-40. Spikes could indicate equipment failure.
-        - Air Flow (m/s): Normal range 2-8. Low values are dangerous.
-        - Wind Speed (m/s): Normal range 2-8. High values could affect stability or operations.
-      - Create 3-5 alerts based on potential anomalies in the sensor data you generate. For example, a high seismic reading should trigger a 'Hard' or 'Critical' risk alert. Alerts should be sorted with the most recent first.
-      - Create 5-10 potential rockfall events. The locations should be geographically plausible, clustered very close to the mine's coordinates (e.g., within +/- 0.01 degrees). The 'probability' for these events must be realistic for a predictive system: most events should have a low probability (less than 0.15), a few may have a moderate probability (between 0.15 and 0.4), and a high-probability event (over 0.4) should be rare and logically linked to a significant anomaly you've generated in the sensor data, which would likely result in a 'Hard' or 'Critical' overall risk level.
-      - Ensure all timestamps are recent and in valid ISO 8601 format, sorted chronologically where appropriate (sensor data should be oldest to newest).
-      - The suggested actions in alerts should be specific and actionable for mining personnel.
+      - The 'overallRisk' must be a logical assessment of the data you generate. For most simulations, use 'Low' or 'Medium'.
+      - A 'Hard' risk should be used if there are significant sensor anomalies or moderately high-probability events.
+      - A 'Critical' risk level is for extreme, life-threatening situations ONLY. To use 'Critical', you must generate at least one rockfall event with a probability greater than 0.75, backed by extreme readings in related sensors (e.g., massive seismic spike, extreme displacement). Suggested actions for 'Critical' alerts must be direct and urgent, like "IMMEDIATE EVACUATION of Zone C required."
+      - Generate a time-series of sensor data for the last 12 hours, with readings every 30 minutes for each of the seven sensor types. Ensure values fluctuate realistically.
+        - Seismic data (μm/s): Normal 0-500. Spikes up to 1500 (Hard) or >3000 (Critical) indicate instability.
+        - Gas levels (ppm): Normal 0-50.
+        - Temperature (°C): Normal 15-40.
+        - Air Flow (m/s): Normal 2-8.
+        - Wind Speed (m/s): Normal 2-8.
+        - Displacement (mm): Normal 0-10. Spikes to 50 (Hard) or >100 (Critical) indicate significant ground movement.
+        - Pore Pressure (kPa): Normal 0-50. Spikes to 150 (Hard) or >250 (Critical), especially after 'Precipitation' events, indicate high risk.
+      - Create 3-5 alerts based on potential anomalies in the sensor data. The risk level must match the severity of the data. Alerts should be sorted with the most recent first.
+      - Create 15-25 potential rockfall events, clustered tightly inside the mine area (within +/- 0.005 degrees of the mine's lat/lng).
+      - Event probabilities should be realistic: most < 0.15, some between 0.15-0.4 (Medium/Hard risk). A high-probability event (>0.4) should be rare and linked to a significant sensor anomaly. An event with probability > 0.75 is a 'Critical' trigger.
+      - Ensure all timestamps are recent and in valid ISO 8601 format, sorted chronologically where appropriate.
     `;
 
     try {
@@ -138,10 +158,13 @@ export const getRiskAnalysis = async (mineData: MineData, isScenario: boolean = 
     const latestSeismic = getLatestSensorValue(mineData.sensors, 'seismic');
     const latestGas = getLatestSensorValue(mineData.sensors, 'gas');
     const latestTemp = getLatestSensorValue(mineData.sensors, 'temperature');
+    const latestDisplacement = getLatestSensorValue(mineData.sensors, 'displacement');
+    const latestPorePressure = getLatestSensorValue(mineData.sensors, 'pore-pressure');
+
 
     const scenarioPreamble = `
         Analyze the following hypothetical 'what-if' scenario for "${mineData.mine.name}".
-        The goal is to understand the potential risk implications of specific sensor readings, assuming all other background factors (DEM, drone imagery, etc.) remain as they are in the baseline real-time data.
+        The goal is to understand the potential risk implications of specific sensor readings, assuming all other background factors remain constant.
     `;
     const realTimePreamble = `
         Act as an expert geotechnical engineer and AI risk analyst for the mining industry.
@@ -156,18 +179,14 @@ export const getRiskAnalysis = async (mineData: MineData, isScenario: boolean = 
           - Seismic: ${latestSeismic?.toFixed(2) ?? 'N/A'} µm/s
           - Gas: ${latestGas?.toFixed(2) ?? 'N/A'} ppm
           - Temperature: ${latestTemp?.toFixed(2) ?? 'N/A'} °C
+          - Displacement: ${latestDisplacement?.toFixed(2) ?? 'N/A'} mm
+          - Pore Pressure: ${latestPorePressure?.toFixed(2) ?? 'N/A'} kPa
         
-        ${!isScenario ? `In addition to this data, you have also analyzed the latest Digital Elevation Models (DEM), drone imagery, and geotechnical sensor data (strain, pore pressure).` : ''}
+        ${!isScenario ? `In addition to this data, you have also analyzed the latest Digital Elevation Models (DEM), drone imagery, and other geotechnical data.` : ''}
         
-        Based on your comprehensive analysis of ALL available data (the provided real-time data and the other simulated sources like DEM/imagery), generate an at-a-glance, point-wise risk analysis report for this ${isScenario ? 'scenario' : 'situation'}.
+        Based on your comprehensive analysis of ALL available data, generate an at-a-glance, point-wise risk analysis report.
         The report must be extremely concise and easy for a mine manager to understand in seconds.
-        
-        - **overallAssessment**: Provide a single-sentence overall assessment.
-        - **immediateOutlook**: Provide a single-sentence immediate outlook.
-        - **keyFactors**: Provide 2-3 key contributing factors.
-        - **recommendations**: Provide 2-3 concrete recommendations.
-        
-        Each factor and recommendation must be a short, direct bullet point.
+        If the risk level is 'Critical', the recommendations MUST be direct commands for ensuring personnel safety (e.g., immediate evacuation).
     `;
 
     try {

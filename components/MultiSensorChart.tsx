@@ -1,17 +1,19 @@
 import React from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import type { SensorDataPoint } from '../types';
+import type { SensorDataPoint, SensorType } from '../types';
 
 interface MultiSensorChartProps {
     data: SensorDataPoint[];
 }
 
-const SENSOR_COLORS: Record<SensorDataPoint['sensorType'], string> = {
+const SENSOR_COLORS: Record<SensorType, string> = {
     seismic: '#22C55E', // green-500
     gas: '#F97316',   // orange-500
     temperature: '#EF4444', // red-500
     'air-flow': '#14B8A6', // teal-500
-    'wind-speed': '#F59E0B' // amber-500
+    'wind-speed': '#F59E0B', // amber-500
+    'displacement': '#8B5CF6', // violet-500
+    'pore-pressure': '#3B82F6', // blue-500
 };
 
 export const MultiSensorChart: React.FC<MultiSensorChartProps> = ({ data }) => {

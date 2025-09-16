@@ -1,5 +1,5 @@
 import React from 'react';
-import { DashboardIcon, MapIcon, AlertIcon, AnalysisIcon, SettingsIcon } from './Icons';
+import { DashboardIcon, MapIcon, AlertIcon, AnalysisIcon, SettingsIcon, HistoryIcon } from './Icons';
 import type { Mine } from '../types';
 
 interface SidebarProps {
@@ -33,6 +33,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ mine, currentView, onViewChang
         { id: 'map', label: 'Risk Map', icon: <MapIcon /> },
         { id: 'alerts', label: 'Active Alerts', icon: <AlertIcon /> },
         { id: 'analysis', label: 'AI Analysis', icon: <AnalysisIcon /> },
+        { id: 'history', label: 'Data History', icon: <HistoryIcon /> },
         { id: 'settings', label: 'Settings', icon: <SettingsIcon /> },
     ];
 

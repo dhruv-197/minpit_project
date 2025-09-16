@@ -9,7 +9,7 @@ const defaultSettings: NotificationSettings = {
     phone: '',
     notifyOn: {
         Low: false,
-        Medium: false,
+        Medium: true,
         Hard: true,
         Critical: true,
     },
@@ -23,12 +23,7 @@ export const SettingsView: React.FC = () => {
         try {
             const savedSettings = localStorage.getItem(SETTINGS_KEY);
             if (savedSettings) {
-                // Ensure new settings structure is merged with old, if necessary
                 const loaded = JSON.parse(savedSettings);
-                if (loaded.notifyOn.High !== undefined && loaded.notifyOn.Hard === undefined) {
-                    loaded.notifyOn.Hard = loaded.notifyOn.High;
-                    delete loaded.notifyOn.High;
-                }
                 setSettings(s => ({...s, ...loaded}));
             }
         } catch (error) {

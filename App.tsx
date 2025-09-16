@@ -8,7 +8,9 @@ import { AnalysisView } from './components/AnalysisView';
 import { SettingsView } from './components/SettingsView';
 import { LandingPage } from './components/LandingPage';
 import { NationwideMapView } from './components/NationwideMapView';
+import { HistoryView } from './components/HistoryView';
 import { getMineData } from './services/geminiService';
+import { saveMineDataToHistory } from './services/historyService';
 import type { Mine, MineData } from './types';
 
 const App: React.FC = () => {
@@ -27,7 +29,7 @@ const App: React.FC = () => {
     try {
       const data = await getMineData(mine);
       setMineData(data);
-      // Removed call to saveMineDataToHistory
+      saveMineDataToHistory(mine.id, data);
     } catch (e) {
       console.error(e);
       setError('Failed to fetch mine data. Please try again.');
@@ -87,6 +89,8 @@ const App: React.FC = () => {
         return <AlertsView data={mineData} />;
       case 'analysis':
         return <AnalysisView mineData={mineData} />;
+      case 'history':
+        return <HistoryView mine={selectedMine} />;
       case 'settings':
         return <SettingsView />;
       default:

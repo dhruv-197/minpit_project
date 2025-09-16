@@ -8,7 +8,7 @@ export interface Mine {
 
 export type RiskLevel = 'Low' | 'Medium' | 'Hard' | 'Critical';
 
-export type SensorType = 'seismic' | 'gas' | 'temperature' | 'air-flow' | 'wind-speed';
+export type SensorType = 'seismic' | 'gas' | 'temperature' | 'air-flow' | 'wind-speed' | 'displacement' | 'pore-pressure';
 
 export interface SensorDataPoint {
   time: string; // ISO 8601

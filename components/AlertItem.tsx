@@ -10,17 +10,17 @@ const BellIcon = () => (
 );
 
 export const AlertItem: React.FC<AlertItemProps> = ({ alert }) => {
-    const riskStyles: Record<RiskLevel, { bg: string, text: string, border: string }> = {
+    const riskStyles: Record<RiskLevel, { bg: string, text: string, border: string, animation?: string }> = {
         'Low': { bg: 'bg-low/10', text: 'text-low', border: 'border-low' },
         'Medium': { bg: 'bg-medium/10', text: 'text-medium', border: 'border-medium' },
         'Hard': { bg: 'bg-high/10', text: 'text-high', border: 'border-high' },
-        'Critical': { bg: 'bg-critical/10', text: 'text-critical', border: 'border-critical' },
+        'Critical': { bg: 'bg-critical/10', text: 'text-critical', border: 'border-critical', animation: 'animate-pulse-fast' },
     };
 
     const styles = riskStyles[alert.riskLevel];
 
     return (
-        <div className={`p-4 rounded-lg border-l-4 ${styles.bg} ${styles.border} transition-shadow hover:shadow-lg`}>
+        <div className={`p-4 rounded-lg border-l-4 ${styles.bg} ${styles.border} transition-shadow hover:shadow-lg ${styles.animation}`}>
             <div className="flex items-start justify-between">
                 <div>
                     <div className="flex items-center gap-3">
