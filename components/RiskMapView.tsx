@@ -11,13 +11,9 @@ interface RiskMapViewProps {
 
 const eventColors: Record<RockfallEventType, string> = {
     'Precipitation': '#3B82F6',
-    'Snowmelt': '#06B6D4',
-    'Rain-on-snow': '#06B6D4',
     'Crack propagation': '#F97316',
-    'Wildfire': '#EF4444',
     'Blasting': '#8B5CF6',
     'Ground vibration': '#6366F1',
-    'Freeze-thaw': '#EAB308',
     'Thermal stress': '#EC4899',
     'Unknown': '#6B7280',
 };
@@ -45,11 +41,11 @@ const getHeatmapColor = (probability: number, volume: number): string => {
 
 
 const TriggerLegend = () => (
-    <div className="bg-black/40 backdrop-blur-md p-4 rounded-lg shadow-lg border border-white/20">
-        <h4 className="font-bold mb-2 text-sm text-text-primary">Trigger Legend</h4>
+    <div className="bg-white/60 dark:bg-black/40 backdrop-blur-md p-4 rounded-lg shadow-lg border border-black/10 dark:border-white/20">
+        <h4 className="font-bold mb-2 text-sm text-text-primary-light dark:text-text-primary">Trigger Legend</h4>
         <ul className="space-y-1.5">
             {Object.entries(eventColors).map(([type, color]) => (
-                <li key={type} className="flex items-center text-xs text-text-secondary">
+                <li key={type} className="flex items-center text-xs text-text-secondary-light dark:text-text-secondary">
                     <span className="w-3 h-3 rounded-full mr-2" style={{ backgroundColor: color, border: '1px solid #F9FAFB' }}></span>
                     <span>{type}</span>
                 </li>
@@ -61,11 +57,11 @@ const TriggerLegend = () => (
 const VolumeScale = () => {
     const volumes = [0.5, 5, 50, 500, 5000, 50000];
     return (
-        <div className="bg-black/40 backdrop-blur-md p-4 rounded-lg shadow-lg border border-white/20">
-            <h4 className="font-bold mb-2 text-sm text-text-primary">Volume (cubic meters)</h4>
+        <div className="bg-white/60 dark:bg-black/40 backdrop-blur-md p-4 rounded-lg shadow-lg border border-black/10 dark:border-white/20">
+            <h4 className="font-bold mb-2 text-sm text-text-primary-light dark:text-text-primary">Volume (cubic meters)</h4>
             <ul className="space-y-2.5">
                 {volumes.map((vol, i) => (
-                    <li key={vol} className="flex items-center text-xs text-text-secondary">
+                    <li key={vol} className="flex items-center text-xs text-text-secondary-light dark:text-text-secondary">
                         <span className="rounded-full mr-2.5" style={{ 
                             width: getRadiusFromVolume(vol) * 1.5, 
                             height: getRadiusFromVolume(vol) * 1.5, 
@@ -175,19 +171,35 @@ export const RiskMapView: React.FC<RiskMapViewProps> = ({ data }) => {
             const style = document.createElement('style');
             style.id = styleId;
             style.innerHTML = `
+              /* Light theme tooltip */
               .leaflet-tooltip.map-tooltip {
+                background-color: rgba(255, 255, 255, 0.8);
+                border: 1px solid #E2E8F0;
+                color: #1E293B;
+                border-radius: 6px;
+                box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+              }
+              /* Dark theme tooltip override */
+              .dark .leaflet-tooltip.map-tooltip {
                 background-color: rgba(31, 41, 55, 0.8);
                 border: 1px solid #374151;
                 color: #F9FAFB;
-                border-radius: 6px;
                 box-shadow: 0 1px 3px rgba(0,0,0,0.5);
               }
+              /* Light theme layer control */
               .leaflet-control-layers {
-                background-color: rgba(31, 41, 55, 0.8) !important;
+                background-color: rgba(255, 255, 255, 0.8) !important;
                 backdrop-filter: blur(4px);
+                border: 1px solid #E2E8F0 !important;
+                color: #1E293B !important;
+                border-radius: 6px !important;
+                box-shadow: 0 1px 3px rgba(0,0,0,0.2) !important;
+              }
+              /* Dark theme layer control override */
+              .dark .leaflet-control-layers {
+                background-color: rgba(31, 41, 55, 0.8) !important;
                 border: 1px solid #374151 !important;
                 color: #F3F4F6 !important;
-                border-radius: 6px !important;
                 box-shadow: 0 1px 3px rgba(0,0,0,0.5) !important;
               }
                .leaflet-control-layers-selector {

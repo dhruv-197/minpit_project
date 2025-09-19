@@ -17,6 +17,18 @@ const SENSOR_COLORS: Record<SensorType, string> = {
 };
 
 export const MultiSensorChart: React.FC<MultiSensorChartProps> = ({ data }) => {
+    const isDarkMode = document.documentElement.classList.contains('dark');
+    
+    const tooltipStyle = {
+        backgroundColor: isDarkMode ? '#1F2937' : '#ffffff',
+        borderColor: isDarkMode ? '#374151' : '#e2e8f0',
+        borderRadius: '0.5rem',
+        color: isDarkMode ? '#F3F4F6' : '#0f172a',
+    };
+    const axisColor = isDarkMode ? '#9CA3AF' : '#475569';
+    const gridColor = isDarkMode ? '#374151' : '#e2e8f0';
+
+
     const formattedData = React.useMemo(() => {
         const dataByTime: { [time: string]: { time: string;[key: string]: any } } = {};
 
@@ -41,23 +53,19 @@ export const MultiSensorChart: React.FC<MultiSensorChartProps> = ({ data }) => {
     return (
         <ResponsiveContainer width="100%" height="100%">
             <LineChart data={formattedData} margin={{ top: 5, right: 20, left: -10, bottom: 20 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
+                <CartesianGrid strokeDasharray="3 3" stroke={gridColor} />
                 <XAxis 
                   dataKey="time" 
-                  stroke="#9CA3AF" 
+                  stroke={axisColor} 
                   fontSize={10} 
                   angle={-25}
                   textAnchor="end"
                   height={60}
                   />
-                <YAxis stroke="#9CA3AF" fontSize={12} yAxisId="left" orientation="left" />
+                <YAxis stroke={axisColor} fontSize={12} yAxisId="left" orientation="left" />
                 <Tooltip 
-                    contentStyle={{ 
-                        backgroundColor: '#1F2937', 
-                        borderColor: '#374151',
-                        borderRadius: '0.5rem' 
-                    }} 
-                    labelStyle={{ color: '#F3F4F6' }}
+                    contentStyle={tooltipStyle}
+                    labelStyle={{ color: isDarkMode ? '#F3F4F6' : '#0f172a' }}
                 />
                 <Legend wrapperStyle={{ fontSize: '14px' }}/>
                 {Object.entries(SENSOR_COLORS).map(([type, color]) => (

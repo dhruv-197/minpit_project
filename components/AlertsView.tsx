@@ -26,8 +26,8 @@ export const AlertsView: React.FC<AlertsViewProps> = ({ data }) => {
                     </div>
                 ) : (
                     <div className="text-center py-12">
-                        <p className="text-text-secondary text-lg">No active alerts at this time.</p>
-                        <p className="text-text-secondary mt-1">All systems are nominal.</p>
+                        <p className="text-text-secondary-light dark:text-text-secondary text-lg">No active alerts at this time.</p>
+                        <p className="text-text-secondary-light dark:text-text-secondary mt-1">All systems are nominal.</p>
                     </div>
                 )}
             </Card>

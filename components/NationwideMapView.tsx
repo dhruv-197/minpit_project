@@ -49,12 +49,20 @@ export const NationwideMapView: React.FC<NationwideMapViewProps> = ({ onSelectMi
             });
              const style = document.createElement('style');
              style.innerHTML = `
+               /* Light theme tooltip */
                .leaflet-tooltip.map-tooltip {
-                 background-color: rgba(30, 41, 59, 0.8);
+                 background-color: rgba(255, 255, 255, 0.8);
                  backdrop-filter: blur(4px);
+                 border: 1px solid #E2E8F0;
+                 color: #1E293B;
+                 border-radius: 6px;
+                 box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+               }
+               /* Dark theme tooltip override */
+               .dark .leaflet-tooltip.map-tooltip {
+                 background-color: rgba(30, 41, 59, 0.8);
                  border: 1px solid #334155;
                  color: #F1F5F9;
-                 border-radius: 6px;
                  box-shadow: 0 1px 3px rgba(0,0,0,0.5);
                }
              `;
@@ -76,10 +84,10 @@ export const NationwideMapView: React.FC<NationwideMapViewProps> = ({ onSelectMi
     }, [onSelectMine]);
 
     return (
-        <div className="h-screen w-screen flex flex-col">
-            <header className="p-4 bg-sidebar/80 backdrop-blur-sm shadow-md z-10 text-center border-b border-border">
-                <h1 className="text-3xl font-bold text-text-primary">MineSafe - National Oversight</h1>
-                <p className="text-text-secondary mt-1">Select a mine site to view its real-time risk dashboard.</p>
+        <div className="h-screen w-screen flex flex-col bg-background-light dark:bg-background text-text-primary-light dark:text-text-primary">
+            <header className="p-4 bg-sidebar-light/80 dark:bg-sidebar/80 backdrop-blur-sm shadow-md z-10 text-center border-b border-border-light dark:border-border">
+                <h1 className="text-3xl font-bold">MineSafe - National Oversight</h1>
+                <p className="text-text-secondary-light dark:text-text-secondary mt-1">Select a mine site to view its real-time risk dashboard.</p>
             </header>
             <main ref={mapContainerRef} className="flex-grow z-0"></main>
         </div>

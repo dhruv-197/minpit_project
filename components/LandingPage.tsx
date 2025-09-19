@@ -10,13 +10,13 @@ const EnterIcon = () => (
 
 export const LandingPage: React.FC<LandingPageProps> = ({ onEnter }) => {
   return (
-    // Replaced the solid black overlay with a subtle gradient to ensure text readability while making the background video visible.
-    <div className="h-screen w-screen flex flex-col items-center justify-center text-center text-white p-4 bg-gradient-to-b from-black/60 via-transparent to-black/60">
-        <div className="bg-black/30 backdrop-blur-md p-10 rounded-xl border border-white/20 shadow-2xl">
-            <h1 className="text-5xl md:text-7xl font-extrabold mb-4 tracking-tight">
+    // Removed the dark gradient overlay to make the new body background fully visible.
+    <div className="h-screen w-screen flex flex-col items-center justify-center text-center p-4">
+        <div className="bg-white/30 dark:bg-black/30 backdrop-blur-md p-10 rounded-xl border border-black/10 dark:border-white/20 shadow-2xl">
+            <h1 className="text-5xl md:text-7xl font-extrabold mb-4 tracking-tight text-slate-900 dark:text-white">
                 MineSafe India
             </h1>
-            <p className="text-lg md:text-xl text-text-secondary max-w-2xl mx-auto mb-8">
+            <p className="text-lg md:text-xl text-slate-700 dark:text-text-secondary max-w-2xl mx-auto mb-8">
                 Leveraging predictive AI to create a safer future for mining operations. Real-time monitoring and rockfall prediction at your fingertips.
             </p>
             <button 

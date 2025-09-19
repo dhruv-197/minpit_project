@@ -26,8 +26,8 @@ const SensorSlider: React.FC<{
 }> = ({ label, unit, value, min, max, step, onChange }) => (
     <div className="space-y-2">
         <div className="flex justify-between items-center">
-            <label className="text-sm font-medium text-text-secondary">{label}</label>
-            <span className="text-sm font-bold text-text-primary bg-background px-2 py-1 rounded-md">{value.toFixed(1)} {unit}</span>
+            <label className="text-sm font-medium text-text-secondary-light dark:text-text-secondary">{label}</label>
+            <span className="text-sm font-bold text-text-primary-light dark:text-text-primary bg-background-light dark:bg-background px-2 py-1 rounded-md">{value.toFixed(1)} {unit}</span>
         </div>
         <input
             type="range"
@@ -36,7 +36,7 @@ const SensorSlider: React.FC<{
             step={step}
             value={value}
             onChange={onChange}
-            className="w-full h-2 bg-primary rounded-lg appearance-none cursor-pointer accent-accent"
+            className="w-full h-2 bg-primary-light dark:bg-primary rounded-lg appearance-none cursor-pointer accent-accent"
         />
     </div>
 );
@@ -115,7 +115,7 @@ export const AnalysisView: React.FC<AnalysisViewProps> = ({ mineData }) => {
     };
 
     if (!mineData) {
-        return <div className="flex items-center justify-center h-full"><p className="text-text-secondary">No mine data available to analyze.</p></div>;
+        return <div className="flex items-center justify-center h-full"><p className="text-text-secondary-light dark:text-text-secondary">No mine data available to analyze.</p></div>;
     }
     
     if (isLoading) {
@@ -135,21 +135,21 @@ export const AnalysisView: React.FC<AnalysisViewProps> = ({ mineData }) => {
             <Card title="AI Risk Analysis (Live Data)">
                 <div className="space-y-4">
                     <div>
-                        <h4 className="text-sm font-medium text-text-secondary uppercase tracking-wider">Assessment</h4>
-                        <p className="text-lg text-text-primary">{analysis.overallAssessment}</p>
+                        <h4 className="text-sm font-medium text-text-secondary-light dark:text-text-secondary uppercase tracking-wider">Assessment</h4>
+                        <p className="text-lg text-text-primary-light dark:text-text-primary">{analysis.overallAssessment}</p>
                     </div>
                     <div>
-                        <h4 className="text-sm font-medium text-text-secondary uppercase tracking-wider">Immediate Outlook</h4>
-                        <p className="text-lg text-text-primary">{analysis.immediateOutlook}</p>
+                        <h4 className="text-sm font-medium text-text-secondary-light dark:text-text-secondary uppercase tracking-wider">Immediate Outlook</h4>
+                        <p className="text-lg text-text-primary-light dark:text-text-primary">{analysis.immediateOutlook}</p>
                     </div>
                 </div>
             </Card>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <Card title="Key Contributing Factors">
-                    <ul className="space-y-3 text-text-primary">
+                    <ul className="space-y-3 text-text-primary-light dark:text-text-primary">
                         {analysis.keyFactors.map((factor, index) => (
-                           <li key={index} className="flex items-start p-3 bg-primary/40 rounded-lg hover:bg-primary transition-colors duration-200">
+                           <li key={index} className="flex items-start p-3 bg-primary-light/40 dark:bg-primary/40 rounded-lg hover:bg-primary-light dark:hover:bg-primary transition-colors duration-200">
                                 <div className="flex-shrink-0 w-8 h-8 rounded-full bg-secondary-accent/20 flex items-center justify-center mr-4">
                                     <span className="text-secondary-accent"><LightbulbIcon /></span>
                                 </div>
@@ -159,9 +159,9 @@ export const AnalysisView: React.FC<AnalysisViewProps> = ({ mineData }) => {
                     </ul>
                 </Card>
                 <Card title="Actionable Recommendations">
-                    <ul className="space-y-3 text-text-primary">
+                    <ul className="space-y-3 text-text-primary-light dark:text-text-primary">
                         {analysis.recommendations.map((rec, index) => (
-                           <li key={index} className="flex items-start p-3 bg-primary/40 rounded-lg hover:bg-primary transition-colors duration-200">
+                           <li key={index} className="flex items-start p-3 bg-primary-light/40 dark:bg-primary/40 rounded-lg hover:bg-primary-light dark:hover:bg-primary transition-colors duration-200">
                                 <div className="flex-shrink-0 w-8 h-8 rounded-full bg-accent/20 flex items-center justify-center mr-4">
                                     <span className="text-accent"><ShieldIcon /></span>
                                 </div>
@@ -174,7 +174,7 @@ export const AnalysisView: React.FC<AnalysisViewProps> = ({ mineData }) => {
             
             <Card title="What-If Scenario Analysis">
                 <div className="space-y-4">
-                    <p className="text-sm text-text-secondary">Adjust the sliders to simulate different sensor readings and run a new AI analysis to predict the potential impact on risk.</p>
+                    <p className="text-sm text-text-secondary-light dark:text-text-secondary">Adjust the sliders to simulate different sensor readings and run a new AI analysis to predict the potential impact on risk.</p>
                     <SensorSlider label="Seismic Activity" unit="μm/s" min={0} max={2000} step={10} value={scenarioValues.seismic} onChange={(e) => setScenarioValues(v => ({...v, seismic: parseFloat(e.target.value)}))} />
                     <SensorSlider label="Gas Levels" unit="ppm" min={0} max={200} step={1} value={scenarioValues.gas} onChange={(e) => setScenarioValues(v => ({...v, gas: parseFloat(e.target.value)}))} />
                     <SensorSlider label="Temperature" unit="°C" min={0} max={80} step={1} value={scenarioValues.temperature} onChange={(e) => setScenarioValues(v => ({...v, temperature: parseFloat(e.target.value)}))} />
@@ -185,24 +185,24 @@ export const AnalysisView: React.FC<AnalysisViewProps> = ({ mineData }) => {
                 {isScenarioLoading && <div className="mt-6 flex justify-center"><LoadingSpinner /></div>}
                 {scenarioError && <div className="mt-6 text-center text-critical">{scenarioError}</div>}
                 {scenarioAnalysis && (
-                    <div className="mt-6 pt-6 border-t border-border space-y-4">
-                        <h4 className="text-lg font-bold text-text-primary">Scenario Analysis Result</h4>
-                         <div className="space-y-4 bg-primary/30 p-4 rounded-md">
+                    <div className="mt-6 pt-6 border-t border-border-light dark:border-border space-y-4">
+                        <h4 className="text-lg font-bold text-text-primary-light dark:text-text-primary">Scenario Analysis Result</h4>
+                         <div className="space-y-4 bg-primary-light/30 dark:bg-primary/30 p-4 rounded-md">
                             <div>
-                                <h5 className="text-sm font-medium text-text-secondary uppercase tracking-wider">Scenario Assessment</h5>
-                                <p className="text-md text-text-primary">{scenarioAnalysis.overallAssessment}</p>
+                                <h5 className="text-sm font-medium text-text-secondary-light dark:text-text-secondary uppercase tracking-wider">Scenario Assessment</h5>
+                                <p className="text-md text-text-primary-light dark:text-text-primary">{scenarioAnalysis.overallAssessment}</p>
                             </div>
                             <div>
-                                <h5 className="text-sm font-medium text-text-secondary uppercase tracking-wider">Scenario Outlook</h5>
-                                <p className="text-md text-text-primary">{scenarioAnalysis.immediateOutlook}</p>
+                                <h5 className="text-sm font-medium text-text-secondary-light dark:text-text-secondary uppercase tracking-wider">Scenario Outlook</h5>
+                                <p className="text-md text-text-primary-light dark:text-text-primary">{scenarioAnalysis.immediateOutlook}</p>
                             </div>
                         </div>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                              <div>
-                                <h5 className="font-semibold text-text-primary mb-2">Key Factors (Scenario)</h5>
-                                <ul className="space-y-3 text-text-primary">
+                                <h5 className="font-semibold text-text-primary-light dark:text-text-primary mb-2">Key Factors (Scenario)</h5>
+                                <ul className="space-y-3 text-text-primary-light dark:text-text-primary">
                                     {scenarioAnalysis.keyFactors.map((factor, index) => (
-                                       <li key={index} className="flex items-start p-3 bg-primary/40 rounded-lg">
+                                       <li key={index} className="flex items-start p-3 bg-primary-light/40 dark:bg-primary/40 rounded-lg">
                                             <div className="flex-shrink-0 w-8 h-8 rounded-full bg-secondary-accent/20 flex items-center justify-center mr-4"><span className="text-secondary-accent"><LightbulbIcon /></span></div>
                                             <span className="pt-1">{factor}</span>
                                        </li>
@@ -210,10 +210,10 @@ export const AnalysisView: React.FC<AnalysisViewProps> = ({ mineData }) => {
                                 </ul>
                             </div>
                              <div>
-                                <h5 className="font-semibold text-text-primary mb-2">Recommendations (Scenario)</h5>
-                                <ul className="space-y-3 text-text-primary">
+                                <h5 className="font-semibold text-text-primary-light dark:text-text-primary mb-2">Recommendations (Scenario)</h5>
+                                <ul className="space-y-3 text-text-primary-light dark:text-text-primary">
                                     {scenarioAnalysis.recommendations.map((rec, index) => (
-                                       <li key={index} className="flex items-start p-3 bg-primary/40 rounded-lg">
+                                       <li key={index} className="flex items-start p-3 bg-primary-light/40 dark:bg-primary/40 rounded-lg">
                                             <div className="flex-shrink-0 w-8 h-8 rounded-full bg-accent/20 flex items-center justify-center mr-4"><span className="text-accent"><ShieldIcon /></span></div>
                                             <span className="pt-1">{rec}</span>
                                        </li>
@@ -225,7 +225,7 @@ export const AnalysisView: React.FC<AnalysisViewProps> = ({ mineData }) => {
                 )}
             </Card>
 
-             <div className="text-center text-xs text-text-secondary pt-4">
+             <div className="text-center text-xs text-text-secondary-light dark:text-text-secondary pt-4">
                 <p>This analysis is AI-generated based on real-time sensor data, simulated geotechnical models (DEM, imagery), and historical patterns. It should be used as a decision-support tool in conjunction with expert human oversight.</p>
             </div>
         </div>

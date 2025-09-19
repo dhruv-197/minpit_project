@@ -13,8 +13,6 @@ export const AlertItem: React.FC<AlertItemProps> = ({ alert }) => {
     const riskStyles: Record<RiskLevel, { bg: string, text: string, border: string, animation?: string }> = {
         'Low': { bg: 'bg-low/10', text: 'text-low', border: 'border-low' },
         'Medium': { bg: 'bg-medium/10', text: 'text-medium', border: 'border-medium' },
-        'Hard': { bg: 'bg-high/10', text: 'text-high', border: 'border-high' },
-        'Critical': { bg: 'bg-critical/10', text: 'text-critical', border: 'border-critical', animation: 'animate-pulse-fast' },
     };
 
     const styles = riskStyles[alert.riskLevel];
@@ -25,16 +23,16 @@ export const AlertItem: React.FC<AlertItemProps> = ({ alert }) => {
                 <div>
                     <div className="flex items-center gap-3">
                         <span className={`font-bold text-lg ${styles.text}`}>{alert.riskLevel.toUpperCase()} ALERT</span>
-                        <span className="text-sm text-text-secondary">{new Date(alert.timestamp).toLocaleString()}</span>
+                        <span className="text-sm text-text-secondary-light dark:text-text-secondary">{new Date(alert.timestamp).toLocaleString()}</span>
                     </div>
-                    <p className="mt-1 text-text-primary"><strong>Zone:</strong> {alert.zoneName} - {alert.message}</p>
+                    <p className="mt-1 text-text-primary-light dark:text-text-primary"><strong>Zone:</strong> {alert.zoneName} - {alert.message}</p>
                 </div>
                 <div className={`p-2 rounded-full ${styles.text}`}>
                   <BellIcon />
                 </div>
             </div>
-            <div className="mt-3 pt-3 border-t border-border">
-                <p className="text-sm text-text-secondary"><strong>Suggested Action:</strong> {alert.suggestedAction}</p>
+            <div className="mt-3 pt-3 border-t border-border-light dark:border-border">
+                <p className="text-sm text-text-secondary-light dark:text-text-secondary"><strong>Suggested Action:</strong> {alert.suggestedAction}</p>
             </div>
         </div>
     );

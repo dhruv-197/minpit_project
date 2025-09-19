@@ -15,20 +15,28 @@ export const SensorChart: React.FC<SensorChartProps> = ({ data, color, legendNam
         time: new Date(d.time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
     }));
 
+    const isDarkMode = document.documentElement.classList.contains('dark');
+
+    const tooltipStyle = {
+        backgroundColor: isDarkMode ? '#111827' : '#ffffff',
+        borderColor: isDarkMode ? '#374151' : '#e2e8f0',
+        borderRadius: '0.5rem',
+        color: isDarkMode ? '#F9FAFB' : '#0f172a',
+        boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)'
+    };
+
+    const axisColor = isDarkMode ? '#9CA3AF' : '#475569';
+    const gridColor = isDarkMode ? '#374151' : '#e2e8f0';
+
     return (
         <ResponsiveContainer width="100%" height="100%">
             <LineChart data={formattedData} margin={{ top: 5, right: 20, left: -10, bottom: 5 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
-                <XAxis dataKey="time" stroke="#9CA3AF" fontSize={12} />
-                <YAxis stroke="#9CA3AF" fontSize={12} />
+                <CartesianGrid strokeDasharray="3 3" stroke={gridColor} />
+                <XAxis dataKey="time" stroke={axisColor} fontSize={12} />
+                <YAxis stroke={axisColor} fontSize={12} />
                 <Tooltip 
-                    contentStyle={{ 
-                        backgroundColor: '#111827', 
-                        borderColor: '#374151',
-                        borderRadius: '0.5rem',
-                        boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)'
-                    }} 
-                    labelStyle={{ color: '#F9FAFB', fontWeight: 'bold' }}
+                    contentStyle={tooltipStyle} 
+                    labelStyle={{ fontWeight: 'bold' }}
                     itemStyle={{ color: color }}
                     formatter={(value: number) => [`${value} ${unit}`, legendName]}
                 />

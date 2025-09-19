@@ -12,20 +12,18 @@ interface DashboardProps {
 const riskStyles: Record<RiskLevel, { bg: string, text: string, border: string, gradient: string, animation?: string }> = {
     'Low': { bg: 'bg-low/10', text: 'text-low', border: 'border-low', gradient: 'from-low/30' },
     'Medium': { bg: 'bg-medium/10', text: 'text-medium', border: 'border-medium', gradient: 'from-medium/30' },
-    'Hard': { bg: 'bg-high/10', text: 'text-high', border: 'border-high', gradient: 'from-high/30' },
-    'Critical': { bg: 'bg-critical/10', text: 'text-critical', border: 'border-critical', gradient: 'from-critical/30', animation: 'animate-pulse-fast' },
 };
 
 const DataPoint: React.FC<{ label: keyof typeof DataIcons; value: string | number; unit?: string }> = ({ label, value, unit }) => {
     const Icon = DataIcons[label];
     return (
-        <div className="flex flex-col items-center justify-center text-center p-4 bg-background/50 rounded-lg">
+        <div className="flex flex-col items-center justify-center text-center p-4 bg-background-light/50 dark:bg-background/50 rounded-lg">
             <div className="text-secondary-accent mb-2">
                 <Icon />
             </div>
             {/* FIX: Explicitly cast `label` to a string before using string methods to satisfy TypeScript. */}
-            <p className="text-sm text-text-secondary">{String(label).charAt(0).toUpperCase() + String(label).slice(1).replace('-', ' ')}</p>
-            <p className="text-xl font-bold text-text-primary">{value} <span className="text-base font-normal text-text-secondary">{unit}</span></p>
+            <p className="text-sm text-text-secondary-light dark:text-text-secondary">{String(label).charAt(0).toUpperCase() + String(label).slice(1).replace('-', ' ')}</p>
+            <p className="text-xl font-bold text-text-primary-light dark:text-text-primary">{value} <span className="text-base font-normal text-text-secondary-light dark:text-text-secondary">{unit}</span></p>
         </div>
     );
 };
@@ -53,9 +51,9 @@ export const Dashboard: React.FC<DashboardProps> = ({ data }) => {
     return (
         <div className="space-y-6">
             <Card>
-                <div className={`p-6 rounded-lg border-l-4 ${styles.border} bg-gradient-to-r ${styles.gradient} to-card flex flex-col md:flex-row justify-between items-center gap-6 ${styles.animation}`}>
+                <div className={`p-6 rounded-lg border-l-4 ${styles.border} bg-gradient-to-r ${styles.gradient} to-card-light dark:to-card flex flex-col md:flex-row justify-between items-center gap-6 ${styles.animation}`}>
                     <div className="text-center md:text-left">
-                        <p className="text-sm font-medium text-text-secondary uppercase tracking-wider">Current Risk Level</p>
+                        <p className="text-sm font-medium text-text-secondary-light dark:text-text-secondary uppercase tracking-wider">Current Risk Level</p>
                         <p className={`text-6xl font-extrabold ${styles.text}`}>{overallRisk.toUpperCase()}</p>
                     </div>
                     <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-4 w-full md:w-auto flex-grow">

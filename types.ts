@@ -6,7 +6,7 @@ export interface Mine {
   lng: number;
 }
 
-export type RiskLevel = 'Low' | 'Medium' | 'Hard' | 'Critical';
+export type RiskLevel = 'Low' | 'Medium';
 
 export type SensorType = 'seismic' | 'gas' | 'temperature' | 'air-flow' | 'wind-speed' | 'displacement' | 'pore-pressure';
 
@@ -28,13 +28,9 @@ export interface RockfallAlert {
 
 export type RockfallEventType =
   | 'Precipitation'
-  | 'Snowmelt'
-  | 'Rain-on-snow'
   | 'Crack propagation'
-  | 'Wildfire'
   | 'Blasting'
   | 'Ground vibration'
-  | 'Freeze-thaw'
   | 'Thermal stress'
   | 'Unknown';
 
@@ -71,4 +67,18 @@ export interface NotificationSettings {
     email: string;
     phone: string;
     notifyOn: Record<RiskLevel, boolean>;
+}
+
+export interface ForecastSummary {
+    assessment: string;
+    keyDrivers: string[];
+    potentialOutcomes: string[];
+}
+
+export interface ForecastData {
+    forecastHours: number;
+    predictedOverallRisk: RiskLevel;
+    predictedAlerts: RockfallAlert[];
+    predictedRockfallEvents: RockfallEvent[];
+    summary: ForecastSummary;
 }
