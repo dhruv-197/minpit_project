@@ -13,29 +13,10 @@ const teamMembers = [
         linkedin: 'https://www.linkedin.com/in/dhruv-soni-76a60b312/',
         details: {
             skills: ['Learning C', 'C++', 'Python', 'Javascript', 'Photo and Video Editing'],
-            project: 'Created Satellite Image Forest Recognition, duplicates of Amazon and YouTube, and an AI chatbot for museum ticket booking and services.',
-            achievement: 'Shortlisted in Maverick Effect 2025',
-        }
-    },
-    {
-        name: 'Hetva Mehta',
-        role: 'Project Contributor',
-        email: 'Hetvamehta01@gmail.com',
-        linkedin: 'https://www.linkedin.com/in/hetva-mehta-17b4b2322/',
-        details: {
-            skills: ['Vision Architecture', 'Strategic Planning', 'Innovation Leadership', 'AI & Web Integration'],
-            project: 'Designed Scalable Web Solutions.',
-            achievement: 'Shortlisted in Maverick Effect 2025',
-        }
-    },
-    {
-        name: 'Heet Patel',
-        role: 'Project Contributor',
-        email: 'heetpatel1200@gmail.com',
-        linkedin: 'https://www.linkedin.com/in/heet-patel-%E2%86%97%EF%B8%8F-08a882320/',
-        details: {
-            skills: ['AI & Automation Development', 'Data Analysis & Problem Solving', 'Entrepreneurship & Business Strategy', 'Project Management', 'Networking & Relationship Building'],
-            project: 'Same as Maverick 😜',
+            project: `1. Created Satellite Image Forest Recognition
+2. AI chatbot for museum ticket booking and services
+3. Developed an Ethical AI and its dedicated website.
+4. Duplicates of Amazon, YouTube, etc.`,
             achievement: 'Shortlisted in Maverick Effect 2025',
         }
     },
@@ -51,13 +32,46 @@ const teamMembers = [
         }
     },
     {
+        name: 'Maulie Jain',
+        role: 'Project Contributor',
+        email: 'jainmaulie@gmail.com',
+        linkedin: 'https://www.linkedin.com/in/maulie-jain-345517332/',
+        details: {
+            skills: ['C', 'Python', 'Good in Study'],
+            project: 'Many Small Projects at Collage',
+            achievement: '',
+        }
+    },
+    {
         name: 'Mohit Makwana',
         role: 'Project Contributor',
         email: 'mohitmakwana2610@gmail.com',
         linkedin: 'https://www.linkedin.com/in/mohit-makwana-a95570289/',
         details: {
             skills: ['Responsible AI Design', 'Web Development', 'User Interface & Experience Design', 'Collaborative Teamwork'],
-            project: 'Created a Responsible AI System along with a supporting website.',
+            project: 'Developed an Ethical AI and its dedicated website.',
+            achievement: 'Shortlisted in Maverick Effect 2025',
+        }
+    },
+    {
+        name: 'Heet Patel',
+        role: 'Project Contributor',
+        email: 'heetpatel1200@gmail.com',
+        linkedin: 'https://www.linkedin.com/in/heet-patel-%E2%86%97%EF%B8%8F-08a882320/',
+        details: {
+            skills: ['AI & Automation Development', 'Data Analysis & Problem Solving', 'Entrepreneurship & Business Strategy', 'Project Management', 'Networking & Relationship Building'],
+            project: 'Developed an Ethical AI and its dedicated website.',
+            achievement: 'Shortlisted in Maverick Effect 2025',
+        }
+    },
+    {
+        name: 'Hetva Mehta',
+        role: 'Project Contributor',
+        email: 'Hetvamehta01@gmail.com',
+        linkedin: 'https://www.linkedin.com/in/hetva-mehta-17b4b2322/',
+        details: {
+            skills: ['Vision Architecture', 'Strategic Planning', 'Innovation Leadership', 'AI & Web Integration'],
+            project: 'Developed an Ethical AI and its dedicated website.',
             achievement: 'Shortlisted in Maverick Effect 2025',
         }
     }
@@ -102,12 +116,14 @@ const TeamMemberModal: React.FC<{ member: TeamMember; onClose: () => void }> = (
                     </div>
                      <div>
                         <h4 className="font-bold text-sm uppercase text-text-secondary-light dark:text-text-secondary tracking-wider mb-2">Project</h4>
-                        <p>{member.details.project}</p>
+                        <p className="whitespace-pre-wrap">{member.details.project}</p>
                     </div>
-                     <div>
-                        <h4 className="font-bold text-sm uppercase text-text-secondary-light dark:text-text-secondary tracking-wider mb-2">Achievement</h4>
-                        <p>{member.details.achievement}</p>
-                    </div>
+                     {member.details.achievement && (
+                        <div>
+                            <h4 className="font-bold text-sm uppercase text-text-secondary-light dark:text-text-secondary tracking-wider mb-2">Achievement</h4>
+                            <p>{member.details.achievement}</p>
+                        </div>
+                     )}
                 </div>
 
                 <div className="mt-8 pt-6 border-t border-border-light dark:border-border flex justify-end">
@@ -171,7 +187,7 @@ export const AboutView: React.FC = () => {
 
             {/* Header Section */}
             <div className="text-center">
-                 <h2 className="text-base font-semibold text-accent tracking-wider uppercase">The 'COMMANDOS' Team</h2>
+                 <h2 className="text-base font-semibold text-accent tracking-wider uppercase">Our Project Team</h2>
                 <p className="mt-2 text-3xl font-extrabold text-text-primary-light dark:text-text-primary tracking-tight sm:text-4xl">
                     Meet the Innovators Behind MineSafe
                 </p>
@@ -197,7 +213,7 @@ export const AboutView: React.FC = () => {
                 </div>
                 <div className="h-64 rounded-lg overflow-hidden">
                     <iframe
-                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3658.825852575239!2d72.39414767510848!3d23.48454527883995!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x395c555555555555%3A0x23943b3531663738!2sSaffrony%20Institute%20of%20Technology!5e0!3m2!1sen!2sin!4v1700000000000"
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3658.818445100656!2d72.39485961497676!3d23.48472128471192!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x395c555555555555%3A0x23943b3531663738!2sSaffrony%20Institute%20of%20Technology!5e0!3m2!1sen!2sin"
                         width="100%"
                         height="100%"
                         style={{ border: 0 }}
