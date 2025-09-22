@@ -85,9 +85,9 @@ export const NationwideMapView: React.FC<NationwideMapViewProps> = ({ onSelectMi
 
     return (
         <div className="h-screen w-screen flex flex-col bg-background-light dark:bg-background text-text-primary-light dark:text-text-primary">
-            <header className="p-4 bg-sidebar-light/80 dark:bg-sidebar/80 backdrop-blur-sm shadow-md z-10 text-center border-b border-border-light dark:border-border">
-                <h1 className="text-3xl font-bold">MineSafe - National Oversight</h1>
-                <p className="text-text-secondary-light dark:text-text-secondary mt-1">Select a mine site to view its real-time risk dashboard.</p>
+            <header className="p-6 bg-gray-900 dark:bg-gray-900 z-10 text-center">
+                <h1 className="text-3xl font-bold text-white">MineSafe - National Oversight</h1>
+                <p className="text-white/80 mt-2 text-lg">Select a mine site to view its real-time risk dashboard.</p>
             </header>
             <main ref={mapContainerRef} className="flex-grow z-0"></main>
         </div>
